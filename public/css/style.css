@@ -431,11 +431,29 @@ body::before {
   line-height: 1; margin-bottom: 0.3rem;
 }
 .hc-lbl { font-size: 0.72rem; color: var(--brown-muted); letter-spacing: 0.05em; }
+.hc-media {
+  width: 100%;
+  height: 140px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+.hc-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+.hero-card:hover .hc-banner-img {
+  transform: scale(1.05);
+}
 .hc-footer { display: flex; align-items: center; gap: 0.75rem; }
 .avatars { display: flex; }
 .av {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 32px; height: 32px; border-radius: 50%;
+  object-fit: cover;
   border: 2px solid var(--cream-white); margin-left: -8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 .av:first-child { margin-left: 0; }
 .av-text { font-size: 0.75rem; color: var(--brown-muted); }
@@ -586,14 +604,14 @@ body::before {
   background: linear-gradient(135deg, rgba(201,150,10,0.15), rgba(44,26,8,0.7));
 }
 
-#vg-1 { background: linear-gradient(135deg, #E6D4B8, #C8AC82); }
-#vg-2 { background: linear-gradient(135deg, #D8E2DC, #94B0A0); }
-#vg-3 { background: linear-gradient(135deg, #F2DDA4, #D4A853); }
-#gg-1 { background: linear-gradient(135deg, #E8D8C8, #C4A88B); }
-#gg-2 { background: linear-gradient(135deg, #D4C5E2, #9680A6); }
-#gg-3 { background: linear-gradient(135deg, #F7D6B3, #D9A066); }
-#gg-4 { background: linear-gradient(135deg, #C5DFE8, #71A5B8); }
-#gg-5 { background: linear-gradient(135deg, #E8C5D0, #C27B90); }
+#vg-1 { background: url('/images/venue_main_hall.jpg') center/cover no-repeat; }
+#vg-2 { background: url('/images/venue_terrace.jpg') center/cover no-repeat; }
+#vg-3 { background: url('/images/venue_dining.jpg') center/cover no-repeat; }
+#gg-1 { background: url('/images/gallery_gala.jpg') center/cover no-repeat; }
+#gg-2 { background: url('/images/gallery_hall.jpg') center/cover no-repeat; }
+#gg-3 { background: url('/images/gallery_concert.jpg') center/cover no-repeat; }
+#gg-4 { background: url('/images/gallery_dining.jpg') center/cover no-repeat; }
+#gg-5 { background: url('/images/gallery_guests.jpg') center/cover no-repeat; }
 
 .vg-overlay {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -640,7 +658,15 @@ body::before {
 .testi-stars { color: var(--gold); font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 1rem; }
 .testi-card p { font-size: 0.92rem; color: var(--brown-mid); line-height: 1.85; margin-bottom: 1.5rem; font-style: italic; }
 .testi-author { display: flex; align-items: center; gap: 0.75rem; }
-.testi-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; color: var(--cream-white); flex-shrink: 0; }
+.testi-av {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+  box-shadow: 0 4px 12px rgba(166,124,16,0.25);
+  flex-shrink: 0;
+}
 .testi-author strong { display: block; font-size: 0.88rem; color: var(--brown-deep); }
 .testi-author span  { font-size: 0.75rem; color: var(--brown-muted); }
 
