@@ -44,7 +44,183 @@
   --ease-elastic: cubic-bezier(0.34,1.56,0.64,1);
 }
 
-/* ── Reset ──────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   MANDATORY LOCATION PERMISSION MODAL
+   ═══════════════════════════════════════════════════════════ */
+.mandatory-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999990;
+  background: rgba(20, 14, 8, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out), visibility 0.5s var(--ease-out);
+}
+.mandatory-modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.mandatory-modal-card {
+  position: relative;
+  max-width: 380px;
+  width: 90%;
+  padding: 1.6rem 1.4rem;
+  border-radius: 20px;
+  background: rgba(255, 251, 240, 0.96);
+  border: 1px solid var(--gold-light);
+  box-shadow: 0 20px 60px rgba(44, 26, 8, 0.35), inset 0 0 20px rgba(201, 150, 10, 0.08);
+  text-align: center;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.5s var(--ease-elastic);
+}
+.mandatory-modal-overlay.visible .mandatory-modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(201, 150, 10, 0.12);
+  border: 1px solid rgba(201, 150, 10, 0.3);
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold-dark);
+  margin-bottom: 0.8rem;
+}
+.modal-badge .mb-icon {
+  color: var(--gold);
+  font-size: 0.8rem;
+}
+
+.modal-icon-wrapper {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-pulse-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  opacity: 0.5;
+  animation: modalPulseRing 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+@keyframes modalPulseRing {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.modal-icon-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(201, 150, 10, 0.35);
+}
+.modal-icon-inner svg {
+  width: 24px;
+  height: 24px;
+  color: var(--cream-white);
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--brown-deep);
+  line-height: 1.25;
+  margin-bottom: 0.4rem;
+}
+
+.modal-highlight-box {
+  background: rgba(201, 150, 10, 0.1);
+  border: 1px dashed rgba(201, 150, 10, 0.35);
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  margin: 0.75rem 0 0.85rem;
+}
+.modal-highlight-box strong {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--brown-deep);
+}
+.modal-highlight-box span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--gold-dark);
+  font-weight: 500;
+  margin-top: 0.1rem;
+}
+
+.modal-desc {
+  font-size: 0.8rem;
+  color: var(--brown-muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.modal-status {
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  margin-bottom: 0.85rem;
+  text-align: center;
+}
+.modal-status.info {
+  background: rgba(201, 150, 10, 0.12);
+  color: var(--brown-deep);
+  border: 1px solid rgba(201, 150, 10, 0.3);
+}
+.modal-status.error {
+  background: rgba(217, 83, 79, 0.12);
+  color: #a94442;
+  border: 1px solid rgba(217, 83, 79, 0.3);
+}
+
+.modal-btn-allow {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.92rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 8px 24px rgba(166, 124, 16, 0.35);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.modal-btn-allow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(166, 124, 16, 0.45);
+}
+
+.modal-footer-note {
+  font-size: 0.72rem;
+  color: var(--brown-muted);
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+/* ── Toast ─────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 

