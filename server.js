@@ -290,10 +290,41 @@ app.get('/admin/dashboard', (req, res) => {
 });
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// ─── Start ───────────────────────────────────────────────────
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-    console.log(`🔒 Admin panel: http://localhost:${PORT}/admin`);
-  });
+// ─── DB Init Middleware ──────────────────────────────────────
+let dbInitialized = false;
+let dbInitPromise = null;
+async function ensureDBInit() {
+  if (dbInitialized) return;
+  if (!dbInitPromise) {
+    dbInitPromise = (async () => {
+      try {
+        await initDB();
+        dbInitialized = true;
+      } catch (err) {
+        console.error('⚠️ DB init warning:', err.message);
+        dbInitPromise = null;
+      }
+    })();
+  }
+  return dbInitPromise;
+}
+
+app.use(async (req, res, next) => {
+  if (!dbInitialized && process.env.DATABASE_URL) {
+    await ensureDBInit();
+  }
+  next();
 });
+
+// ─── Start ───────────────────────────────────────────────────
+if (require.main === module) {
+  ensureDBInit().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
+      console.log(`🔒 Admin panel: http://localhost:${PORT}/admin`);
+    });
+  });
+}
+
+module.exports = app;
+
