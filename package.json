@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "build": "echo 'Build complete'"
+    "start": "node init && node server.js",
+    "dev": "node init && node server.js",
+    "build": "node init && echo 'Build complete'"
   },
   "keywords": [],
   "author": "",
