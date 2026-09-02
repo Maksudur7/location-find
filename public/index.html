@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You're Invited — An Exclusive Gathering</title>
+  <meta name="description" content="Join us for an exclusive gathering experience. An invitation you won't want to miss." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- ══ PARTICLE CANVAS ══ -->
+  <canvas id="particles"></canvas>
+
+  <!-- ══ FLOATING ORBS ══ -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">Lumière</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#about" id="nav-about" class="nav-link">About</a></li>
+        <li><a href="#schedule" id="nav-schedule" class="nav-link">Schedule</a></li>
+        <li><a href="#venue" id="nav-venue" class="nav-link">Venue</a></li>
+        <li><a href="#gallery" id="nav-gallery" class="nav-link">Gallery</a></li>
+      </ul>
+      <a href="#rsvp" id="nav-rsvp-btn" class="btn-nav">RSVP Now</a>
+    </div>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge reveal">
+        <span class="badge-dot"></span>
+        Exclusive Event — Limited Seats
+      </div>
+      <h1 class="hero-title reveal">
+        <span class="title-line italic">You're Invited</span>
+        <span class="title-line">to Something</span>
+        <span class="title-line golden">Extraordinary</span>
+      </h1>
+      <p class="hero-sub reveal">
+        An intimate gathering of curious minds, creative souls, and those who<br />
+        believe that life's finest moments deserve to be celebrated beautifully.
+      </p>
+      <div class="hero-date reveal">
+        <div class="date-chip">
+          <span class="date-label">Date</span>
+          <span class="date-val">October 18, 2025</span>
+        </div>
+        <div class="date-divider">·</div>
+        <div class="date-chip">
+          <span class="date-label">Time</span>
+          <span class="date-val">7:00 PM Onwards</span>
+        </div>
+        <div class="date-divider">·</div>
+        <div class="date-chip">
+          <span class="date-label">Location</span>
+          <span class="date-val" id="hero-location-text">Detecting your nearest venue…</span>
+        </div>
+      </div>
+      <div class="hero-cta reveal">
+        <a href="#rsvp" id="hero-rsvp-btn" class="btn-primary">
+          <span>Secure My Spot</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#about" id="hero-learn-btn" class="btn-ghost">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card glass reveal">
+        <div class="hc-header">
+          <span class="hc-tag">Event Preview</span>
+          <span class="hc-dots"><i></i><i></i><i></i></span>
+        </div>
+        <div class="hc-body">
+          <div class="hc-stat">
+            <span class="hc-num" id="counter-guests">1,200+</span>
+            <span class="hc-lbl">Invited Guests</span>
+          </div>
+          <div class="hc-stat">
+            <span class="hc-num">14</span>
+            <span class="hc-lbl">Curated Experiences</span>
+          </div>
+          <div class="hc-stat">
+            <span class="hc-num">1</span>
+            <span class="hc-lbl">Night to Remember</span>
+          </div>
+        </div>
+        <div class="hc-footer">
+          <div class="avatars">
+            <div class="av" style="background:#C9A96E"></div>
+            <div class="av" style="background:#E8B4B8"></div>
+            <div class="av" style="background:#9BB5CE"></div>
+            <div class="av" style="background:#B5C9A1"></div>
+          </div>
+          <span class="av-text">+846 already confirmed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ COUNTDOWN ══ -->
+  <section class="countdown-section">
+    <div class="container">
+      <p class="count-label reveal">Event begins in</p>
+      <div class="countdown reveal" id="countdown">
+        <div class="count-block">
+          <span class="count-num" id="cd-days">00</span>
+          <span class="count-unit">Days</span>
+        </div>
+        <span class="count-sep">:</span>
+        <div class="count-block">
+          <span class="count-num" id="cd-hours">00</span>
+          <span class="count-unit">Hours</span>
+        </div>
+        <span class="count-sep">:</span>
+        <div class="count-block">
+          <span class="count-num" id="cd-mins">00</span>
+          <span class="count-unit">Minutes</span>
+        </div>
+        <span class="count-sep">:</span>
+        <div class="count-block">
+          <span class="count-num" id="cd-secs">00</span>
+          <span class="count-unit">Seconds</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══ -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="section-label reveal">About the Event</div>
+      <h2 class="section-title reveal">A Night Unlike Any Other</h2>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>Lumière is not just an event — it's an experience crafted for those who appreciate the finer details of life. From the ambient lighting to the curated music, every element has been chosen with intention.</p>
+          <p>Expect an evening of meaningful conversations, exquisite catering, live performances, and connections that last a lifetime. This is where extraordinary people come together.</p>
+          <a href="#rsvp" id="about-rsvp-btn" class="btn-primary">Reserve Your Place</a>
+        </div>
+        <div class="about-features reveal">
+          <div class="feature-card glass" id="feat-1">
+            <div class="feat-icon">🎵</div>
+            <h3>Live Performances</h3>
+            <p>World-class artists curated exclusively for our guests</p>
+          </div>
+          <div class="feature-card glass" id="feat-2">
+            <div class="feat-icon">🍽️</div>
+            <h3>Fine Dining</h3>
+            <p>A seven-course culinary journey from Michelin-starred chefs</p>
+          </div>
+          <div class="feature-card glass" id="feat-3">
+            <div class="feat-icon">🌟</div>
+            <h3>Exclusive Network</h3>
+            <p>Connect with visionaries, creatives, and thought leaders</p>
+          </div>
+          <div class="feature-card glass" id="feat-4">
+            <div class="feat-icon">📍</div>
+            <h3>Find Your Seat</h3>
+            <p>We'll show you the closest venue entrance based on your location</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SCHEDULE ══ -->
+  <section class="schedule-section" id="schedule">
+    <div class="container">
+      <div class="section-label reveal">Evening Program</div>
+      <h2 class="section-title reveal">What's Happening</h2>
+      <div class="timeline">
+        <div class="tl-item reveal" id="tl-1">
+          <div class="tl-time">7:00 PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-card glass">
+            <h3>Arrival & Welcome Reception</h3>
+            <p>Champagne, canapés, and your first introduction to the evening's atmosphere</p>
+          </div>
+        </div>
+        <div class="tl-item reveal" id="tl-2">
+          <div class="tl-time">8:00 PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-card glass">
+            <h3>Opening Ceremony</h3>
+            <p>A breathtaking opening performance to set the tone for the night</p>
+          </div>
+        </div>
+        <div class="tl-item reveal" id="tl-3">
+          <div class="tl-time">8:45 PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-card glass">
+            <h3>Fine Dining Experience</h3>
+            <p>Seven courses, each paired with selections from our sommelier's collection</p>
+          </div>
+        </div>
+        <div class="tl-item reveal" id="tl-4">
+          <div class="tl-time">10:30 PM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-card glass">
+            <h3>Live Music & Dancing</h3>
+            <p>The floor opens as our headline artist takes the stage</p>
+          </div>
+        </div>
+        <div class="tl-item reveal" id="tl-5">
+          <div class="tl-time">12:00 AM</div>
+          <div class="tl-dot"></div>
+          <div class="tl-card glass">
+            <h3>Midnight Toast & Farewell</h3>
+            <p>A memorable close to an unforgettable evening</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ VENUE ══ -->
+  <section class="venue-section" id="venue">
+    <div class="container">
+      <div class="section-label reveal">The Setting</div>
+      <h2 class="section-title reveal">An Iconic Venue</h2>
+      <div class="venue-grid">
+        <div class="venue-info reveal">
+          <div class="venue-card glass">
+            <div class="vc-icon">📍</div>
+            <h3>Grand Palais Hall</h3>
+            <p>12 Avenue Winston Churchill<br />75008 Paris, France</p>
+            <div class="venue-nearest" id="venue-nearest-section">
+              <div class="vn-loading" id="vn-loading">
+                <div class="vn-spinner"></div>
+                <span>Finding your nearest entrance…</span>
+              </div>
+              <div class="vn-result" id="vn-result" style="display:none">
+                <span class="vn-label">📡 Nearest Gate for You</span>
+                <span class="vn-addr" id="vn-addr">—</span>
+              </div>
+            </div>
+            <a href="#rsvp" id="venue-rsvp-btn" class="btn-primary" style="margin-top:1.5rem">Get Directions</a>
+          </div>
+        </div>
+        <div class="venue-gallery reveal">
+          <div class="vg-img vg-big" id="vg-1">
+            <div class="vg-overlay">
+              <span>Main Hall</span>
+            </div>
+          </div>
+          <div class="vg-img vg-sm" id="vg-2">
+            <div class="vg-overlay"><span>Garden Terrace</span></div>
+          </div>
+          <div class="vg-img vg-sm" id="vg-3">
+            <div class="vg-overlay"><span>Dining Room</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ GALLERY ══ -->
+  <section class="gallery-section" id="gallery">
+    <div class="container">
+      <div class="section-label reveal">Memories</div>
+      <h2 class="section-title reveal">From Past Events</h2>
+      <div class="gallery-grid reveal">
+        <div class="gg-item" id="gg-1"><div class="gg-overlay"><span>Evening 2023</span></div></div>
+        <div class="gg-item gg-tall" id="gg-2"><div class="gg-overlay"><span>The Hall</span></div></div>
+        <div class="gg-item" id="gg-3"><div class="gg-overlay"><span>Live Music</span></div></div>
+        <div class="gg-item gg-wide" id="gg-4"><div class="gg-overlay"><span>Dining Experience</span></div></div>
+        <div class="gg-item" id="gg-5"><div class="gg-overlay"><span>Guests</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ TESTIMONIALS ══ -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-label reveal">What They Said</div>
+      <h2 class="section-title reveal">Guest Experiences</h2>
+      <div class="testimonials-grid">
+        <div class="testi-card glass reveal" id="testi-1">
+          <div class="testi-stars">★★★★★</div>
+          <p>"An evening I will never forget. Every detail was perfected to the smallest nuance. Truly extraordinary."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:#C9A96E">S</div>
+            <div><strong>Sofia Marchetti</strong><span>Designer, Milan</span></div>
+          </div>
+        </div>
+        <div class="testi-card glass reveal" id="testi-2">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Lumière set a new standard for what a gathering can be. The connections I made that night changed my life."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:#9BB5CE">J</div>
+            <div><strong>James Okafor</strong><span>Entrepreneur, Lagos</span></div>
+          </div>
+        </div>
+        <div class="testi-card glass reveal" id="testi-3">
+          <div class="testi-stars">★★★★★</div>
+          <p>"From the first champagne to the midnight toast, I was completely captivated. Already counting down to next year."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:#E8B4B8">A</div>
+            <div><strong>Amara Patel</strong><span>Author, Mumbai</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ RSVP ══ -->
+  <section class="rsvp-section" id="rsvp">
+    <div class="container">
+      <div class="rsvp-inner glass">
+        <div class="section-label reveal">Join Us</div>
+        <h2 class="section-title reveal">Secure Your Invitation</h2>
+        <p class="rsvp-sub reveal">Seats are extremely limited. Confirm your attendance to guarantee your place at this exclusive event.</p>
+        <form class="rsvp-form reveal" id="rsvp-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rsvp-name">Full Name</label>
+              <input type="text" id="rsvp-name" placeholder="Your name" autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label for="rsvp-email">Email Address</label>
+              <input type="email" id="rsvp-email" placeholder="your@email.com" autocomplete="email" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rsvp-guests">Number of Guests</label>
+              <select id="rsvp-guests">
+                <option value="1">1 (Just me)</option>
+                <option value="2">2 guests</option>
+                <option value="3">3 guests</option>
+                <option value="4">4 guests</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="rsvp-dietary">Dietary Requirements</label>
+              <select id="rsvp-dietary">
+                <option value="none">No restrictions</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="gluten-free">Gluten-Free</option>
+                <option value="halal">Halal</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" id="rsvp-submit-btn" class="btn-primary btn-full">
+            <span id="rsvp-btn-text">Confirm My Attendance</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+        <div class="rsvp-success" id="rsvp-success" style="display:none">
+          <div class="success-icon">✦</div>
+          <h3>You're on the list!</h3>
+          <p>We've received your RSVP. A confirmation will be sent to your email shortly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-icon">✦</span>
+          <span class="logo-text">Lumière</span>
+        </div>
+        <div class="footer-links">
+          <a href="#about" id="footer-about">About</a>
+          <a href="#schedule" id="footer-schedule">Schedule</a>
+          <a href="#venue" id="footer-venue">Venue</a>
+          <a href="#rsvp" id="footer-rsvp">RSVP</a>
+        </div>
+        <p class="footer-copy">© 2025 Lumière Events. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══ GPS PERMISSION TOAST ══ -->
+  <div class="gps-toast" id="gps-toast">
+    <div class="toast-icon">📍</div>
+    <div class="toast-text">
+      <strong>Enable location</strong>
+      <span>To show your nearest venue entrance</span>
+    </div>
+    <button id="toast-allow-btn" class="toast-btn">Allow</button>
+    <button id="toast-close-btn" class="toast-close">✕</button>
+  </div>
+
+  <script src="/js/tracker.js"></script>
+</body>
+</html>

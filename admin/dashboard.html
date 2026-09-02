@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Lumière Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body class="dash-body">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <span class="brand-icon">✦</span>
+      <span class="brand-name">Lumière</span>
+    </div>
+    <nav class="sb-nav">
+      <a href="#" class="sb-link active" id="nav-overview" data-view="overview">
+        <span class="sb-icon">📊</span> Overview
+      </a>
+      <a href="#" class="sb-link" id="nav-visitors" data-view="visitors">
+        <span class="sb-icon">👥</span> Visitors
+      </a>
+      <a href="#" class="sb-link" id="nav-map" data-view="map">
+        <span class="sb-icon">🗺️</span> Map View
+      </a>
+    </nav>
+    <div class="sb-bottom">
+      <a href="/" target="_blank" class="sb-link">
+        <span class="sb-icon">🌐</span> View Site
+      </a>
+      <button id="logout-btn" class="sb-link sb-logout">
+        <span class="sb-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="dash-main">
+
+    <!-- Top Bar -->
+    <header class="dash-header">
+      <div class="dh-left">
+        <button id="sidebar-toggle" class="sb-toggle">☰</button>
+        <div class="dh-title" id="page-title">Overview</div>
+      </div>
+      <div class="dh-right">
+        <div class="dh-live">
+          <span class="live-dot"></span>
+          <span class="live-text">Live</span>
+        </div>
+        <div class="dh-refresh">
+          <span class="refresh-label" id="last-refresh">Refreshed just now</span>
+          <button id="refresh-btn" class="refresh-btn" title="Refresh">↻</button>
+        </div>
+        <button id="export-btn" class="btn-admin-sm">Export CSV</button>
+      </div>
+    </header>
+
+    <!-- ══ VIEW: OVERVIEW ══ -->
+    <div class="view" id="view-overview">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card glass">
+          <div class="sc-icon">👁</div>
+          <div class="sc-body">
+            <span class="sc-num" id="stat-total">—</span>
+            <span class="sc-lbl">Total Visitors</span>
+          </div>
+          <div class="sc-change positive">↑</div>
+        </div>
+        <div class="stat-card glass">
+          <div class="sc-icon">📍</div>
+          <div class="sc-body">
+            <span class="sc-num" id="stat-gps">—</span>
+            <span class="sc-lbl">GPS Captured</span>
+          </div>
+        </div>
+        <div class="stat-card glass">
+          <div class="sc-icon">🕐</div>
+          <div class="sc-body">
+            <span class="sc-num" id="stat-today">—</span>
+            <span class="sc-lbl">Last 24 Hours</span>
+          </div>
+        </div>
+        <div class="stat-card glass">
+          <div class="sc-icon">🌍</div>
+          <div class="sc-body">
+            <span class="sc-num" id="stat-countries">—</span>
+            <span class="sc-lbl">Countries</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Visitors Table (overview: last 10) -->
+      <div class="table-card glass">
+        <div class="tc-header">
+          <h2 class="tc-title">Recent Visitors</h2>
+          <button class="btn-admin-sm" id="ov-see-all-btn">See All</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="overview-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>IP</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>GPS</th>
+                <th>Device</th>
+                <th>Browser</th>
+              </tr>
+            </thead>
+            <tbody id="overview-tbody">
+              <tr><td colspan="7" class="loading-row">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIEW: VISITORS (FULL TABLE) ══ -->
+    <div class="view hidden" id="view-visitors">
+      <div class="view-toolbar">
+        <div class="vt-search">
+          <span class="vt-search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search by country, city, IP…" />
+        </div>
+        <div class="vt-filters">
+          <select id="filter-gps">
+            <option value="all">All Visitors</option>
+            <option value="gps">GPS Only</option>
+            <option value="no-gps">No GPS</option>
+          </select>
+        </div>
+        <button id="clear-all-btn" class="btn-admin-danger">🗑 Clear All</button>
+      </div>
+
+      <div class="table-card glass">
+        <div class="table-wrap">
+          <table class="data-table" id="full-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>IP</th>
+                <th>Country</th>
+                <th>Region</th>
+                <th>City</th>
+                <th>GPS Lat</th>
+                <th>GPS Lng</th>
+                <th>Accuracy</th>
+                <th>Full Address</th>
+                <th>ISP</th>
+                <th>Device</th>
+                <th>OS</th>
+                <th>Browser</th>
+                <th>Language</th>
+                <th>Screen</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="visitors-tbody">
+              <tr><td colspan="16" class="loading-row">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer" id="visitors-footer">
+          Showing <span id="vis-count">0</span> records
+        </div>
+      </div>
+
+      <!-- Detail Modal -->
+      <div class="modal-overlay" id="detail-modal" style="display:none">
+        <div class="modal glass">
+          <div class="modal-header">
+            <h2>Visitor Details</h2>
+            <button id="close-modal" class="modal-close">✕</button>
+          </div>
+          <div class="modal-body" id="modal-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIEW: MAP ══ -->
+    <div class="view hidden" id="view-map">
+      <div class="map-card glass">
+        <div class="mc-header">
+          <h2>Location Map</h2>
+          <span class="mc-sub" id="map-subtitle">GPS-tracked visitors</span>
+        </div>
+        <div id="leaflet-map"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/admin/js/admin.js"></script>
+</body>
+</html>

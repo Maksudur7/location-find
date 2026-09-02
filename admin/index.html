@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Lumière Control Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/admin/css/admin.css" />
+</head>
+<body class="login-body">
+
+  <div class="login-bg">
+    <div class="lb-orb lb-orb-1"></div>
+    <div class="lb-orb lb-orb-2"></div>
+  </div>
+
+  <div class="login-wrap">
+    <div class="login-card glass">
+      <div class="lc-brand">
+        <span class="brand-icon">✦</span>
+        <span class="brand-name">Lumière</span>
+      </div>
+      <div class="lc-label">Admin Control Panel</div>
+      <h1 class="lc-title">Welcome Back</h1>
+      <p class="lc-sub">Enter your credentials to access the dashboard</p>
+
+      <form id="login-form" class="login-form" autocomplete="off">
+        <div class="lf-group">
+          <label for="admin-pass">Admin Password</label>
+          <div class="lf-input-wrap">
+            <span class="lf-icon">🔒</span>
+            <input
+              type="password"
+              id="admin-pass"
+              placeholder="Enter password"
+              autocomplete="current-password"
+            />
+            <button type="button" id="toggle-pass" class="lf-toggle" title="Show password">👁</button>
+          </div>
+        </div>
+
+        <div class="lf-error" id="login-error" style="display:none">
+          <span>⚠</span> Invalid password. Please try again.
+        </div>
+
+        <button type="submit" id="login-submit" class="btn-admin-primary">
+          <span id="login-btn-text">Access Dashboard</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Check if already logged in
+    if (localStorage.getItem('_admin_token')) {
+      window.location.href = '/admin/dashboard';
+    }
+
+    const form      = document.getElementById('login-form');
+    const errEl     = document.getElementById('login-error');
+    const btnText   = document.getElementById('login-btn-text');
+    const passInput = document.getElementById('admin-pass');
+    const toggle    = document.getElementById('toggle-pass');
+
+    toggle.addEventListener('click', () => {
+      passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.style.display = 'none';
+      btnText.textContent = 'Verifying…';
+      const password = passInput.value;
+
+      try {
+        const res  = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          localStorage.setItem('_admin_token', data.token);
+          window.location.href = '/admin/dashboard';
+        } else {
+          errEl.style.display = 'flex';
+          btnText.textContent = 'Access Dashboard';
+        }
+      } catch {
+        errEl.style.display = 'flex';
+        btnText.textContent = 'Access Dashboard';
+      }
+    });
+  </script>
+</body>
+</html>
