@@ -283,18 +283,16 @@
 
     if (typeof gsap === 'undefined') {
       if (preloader) preloader.style.display = 'none';
-      initReveal();
       return;
     }
 
     // Lock scroll during preloader
     document.body.style.overflow = 'hidden';
-    document.body.classList.add('gsap-loaded');
 
     const masterTl = gsap.timeline();
     const progress = { value: 0 };
 
-    // 1. Progress bar animation (exact 3.0 seconds)
+    // 1. Progress bar animation (exact 3.0 seconds count)
     masterTl.to(progress, {
       value: 100,
       duration: 3.0,
@@ -311,7 +309,8 @@
       masterTl.to('.preloader-content', {
         y: -30,
         opacity: 0,
-        duration: 0.45,
+        scale: 0.95,
+        duration: 0.5,
         ease: 'power2.in'
       })
       .to(preloader, {
@@ -337,210 +336,79 @@
         opacity: 0,
         duration: 0.9,
         stagger: 0.16,
-        ease: 'power3.out'
-      }, '-=0.5')
-      .from('.hero-sub', {
-        y: 30,
-        opacity: 0,
-        duration: 0.7,
-        ease: 'power3.out'
-      }, '-=0.5')
+        ease: 'power3.out',
+        clearProps: 'all'
+      }, '-=0.4')
       .from('.hero-date', {
-        y: 30,
+        y: 25,
+        scale: 0.95,
         opacity: 0,
-        duration: 0.7,
-        ease: 'power3.out'
+        duration: 0.75,
+        ease: 'back.out(1.3)',
+        clearProps: 'all'
       }, '-=0.5')
       .from('.hero-cta', {
-        y: 30,
+        y: 25,
         opacity: 0,
-        duration: 0.7,
-        ease: 'power3.out'
+        duration: 0.75,
+        ease: 'power3.out',
+        clearProps: 'all'
       }, '-=0.5')
       .from('.hero-card', {
         x: 60,
         opacity: 0,
-        duration: 0.95,
-        ease: 'power3.out'
-      }, '-=0.8');
+        duration: 0.9,
+        ease: 'power3.out',
+        clearProps: 'all'
+      }, '-=0.7');
 
-    // 4. ScrollTrigger for rest of the sections
+    // 4. ScrollTrigger for all landing page sections
     if (typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
 
+      const animateSection = (target, triggerEl, props) => {
+        gsap.from(target, {
+          scrollTrigger: {
+            trigger: triggerEl,
+            start: 'top 90%',
+            once: true
+          },
+          duration: 0.8,
+          ease: 'power3.out',
+          clearProps: 'all',
+          ...props
+        });
+      };
+
       // Countdown section
-      gsap.from('.countdown-section .count-label, .countdown-section .countdown', {
-        scrollTrigger: {
-          trigger: '.countdown-section',
-          start: 'top 80%',
-        },
-        y: 35,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
+      animateSection('.countdown-section .count-label', '.countdown-section', { y: 25, opacity: 0 });
+      animateSection('.count-block', '.countdown', { scale: 0.88, y: 25, opacity: 0, stagger: 0.1 });
 
       // About Section
-      gsap.from('#about .section-label, #about .section-title', {
-        scrollTrigger: {
-          trigger: '#about',
-          start: 'top 78%',
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
-
-      gsap.from('#about .about-text', {
-        scrollTrigger: {
-          trigger: '#about .about-grid',
-          start: 'top 78%',
-        },
-        x: -45,
-        opacity: 0,
-        duration: 0.85,
-        ease: 'power3.out'
-      });
-
-      gsap.from('#about .feature-card', {
-        scrollTrigger: {
-          trigger: '#about .about-features',
-          start: 'top 80%',
-        },
-        y: 45,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: 'power3.out'
-      });
+      animateSection('#about .section-label, #about .section-title', '#about', { y: 30, opacity: 0, stagger: 0.12 });
+      animateSection('#about .about-text', '#about .about-grid', { x: -45, opacity: 0 });
+      animateSection('#about .feature-card', '#about .about-features', { y: 35, opacity: 0, stagger: 0.12 });
 
       // Schedule Section
-      gsap.from('#schedule .section-label, #schedule .section-title', {
-        scrollTrigger: {
-          trigger: '#schedule',
-          start: 'top 78%',
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
-
-      gsap.from('#schedule .tl-item', {
-        scrollTrigger: {
-          trigger: '#schedule .timeline',
-          start: 'top 80%',
-        },
-        y: 45,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
+      animateSection('#schedule .section-label, #schedule .section-title', '#schedule', { y: 30, opacity: 0, stagger: 0.12 });
+      animateSection('#schedule .tl-item:nth-child(odd)', '#schedule .timeline', { x: -40, opacity: 0, stagger: 0.14 });
+      animateSection('#schedule .tl-item:nth-child(even)', '#schedule .timeline', { x: 40, opacity: 0, stagger: 0.14 });
 
       // Venue Section
-      gsap.from('#venue .section-label, #venue .section-title', {
-        scrollTrigger: {
-          trigger: '#venue',
-          start: 'top 78%',
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
-
-      gsap.from('#venue .venue-info', {
-        scrollTrigger: {
-          trigger: '#venue .venue-grid',
-          start: 'top 78%',
-        },
-        x: -40,
-        opacity: 0,
-        duration: 0.85,
-        ease: 'power3.out'
-      });
-
-      gsap.from('#venue .vg-img', {
-        scrollTrigger: {
-          trigger: '#venue .venue-gallery',
-          start: 'top 80%',
-        },
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
+      animateSection('#venue .section-label, #venue .section-title', '#venue', { y: 30, opacity: 0, stagger: 0.12 });
+      animateSection('#venue .venue-info', '#venue .venue-grid', { x: -45, opacity: 0 });
+      animateSection('#venue .vg-img', '#venue .venue-gallery', { scale: 0.9, opacity: 0, stagger: 0.12 });
 
       // Gallery Section
-      gsap.from('#gallery .section-label, #gallery .section-title', {
-        scrollTrigger: {
-          trigger: '#gallery',
-          start: 'top 78%',
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
-
-      gsap.from('#gallery .gg-item', {
-        scrollTrigger: {
-          trigger: '#gallery .gallery-grid',
-          start: 'top 80%',
-        },
-        y: 40,
-        opacity: 0,
-        scale: 0.92,
-        duration: 0.75,
-        stagger: 0.1,
-        ease: 'power3.out'
-      });
+      animateSection('#gallery .section-label, #gallery .section-title', '#gallery', { y: 30, opacity: 0, stagger: 0.12 });
+      animateSection('#gallery .gg-item', '#gallery .gallery-grid', { y: 35, opacity: 0, stagger: 0.1 });
 
       // Testimonials Section
-      gsap.from('.testimonials-section .section-label, .testimonials-section .section-title', {
-        scrollTrigger: {
-          trigger: '.testimonials-section',
-          start: 'top 78%',
-        },
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
-
-      gsap.from('.testimonials-section .testi-card', {
-        scrollTrigger: {
-          trigger: '.testimonials-grid',
-          start: 'top 80%',
-        },
-        y: 50,
-        opacity: 0,
-        duration: 0.85,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
+      animateSection('.testimonials-section .section-label, .testimonials-section .section-title', '.testimonials-section', { y: 30, opacity: 0, stagger: 0.12 });
+      animateSection('.testimonials-section .testi-card', '.testimonials-grid', { y: 40, opacity: 0, stagger: 0.14 });
 
       // RSVP Section
-      gsap.from('#rsvp .rsvp-inner', {
-        scrollTrigger: {
-          trigger: '#rsvp',
-          start: 'top 75%',
-        },
-        y: 50,
-        opacity: 0,
-        scale: 0.96,
-        duration: 0.9,
-        ease: 'power3.out'
-      });
+      animateSection('#rsvp .rsvp-inner', '#rsvp', { y: 40, opacity: 0, scale: 0.95 });
     }
   }
 

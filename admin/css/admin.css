@@ -471,9 +471,18 @@ body { font-family: var(--font-sans); background: var(--navy); color: var(--text
   .dash-main { margin-left: 0; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .modal-body { grid-template-columns: 1fr; }
+  .dash-header { padding: 1rem 20px; }
+  .view { padding: 1.25rem 20px; }
+  .tc-header, .mc-header { padding: 1rem 20px; }
+  .table-footer { padding: 0.75rem 20px; }
+  .modal-overlay { padding: 1rem 20px; }
+  .modal { padding: 1.25rem 20px; }
+  .login-wrap { padding: 1rem 20px; }
 }
 @media (max-width: 500px) {
   .stats-grid { grid-template-columns: 1fr; }
-  .view { padding: 1rem; }
-  .dash-header { padding: 1rem; }
+  .view { padding: 1rem 16px; }
+  .dash-header { padding: 1rem 16px; }
+  .login-card { padding: 2rem 16px; }
+  .modal { padding: 1.25rem 16px; }
 }

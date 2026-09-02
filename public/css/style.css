@@ -211,10 +211,8 @@ body::before {
   position: relative; z-index: 1;
 }
 
-/* ── Reveal Animation ────────────────────────────────────────── */
-.reveal { opacity: 0; }
-body.gsap-loaded .reveal { opacity: 1; transform: none; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+/* ── Reveal Animation Base ───────────────────────────────────── */
+.reveal { opacity: 1; }
 
 /* ── Section Labels ──────────────────────────────────────────── */
 .section-label {
@@ -756,23 +754,76 @@ body.gsap-loaded .reveal { opacity: 1; transform: none; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(180,130,20,0.5); }
 
 /* ═══════════════════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE (Max 20px side margin/padding on mobile)
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; }
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .navbar,
+  .navbar.scrolled {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 6.5rem 20px 3.5rem;
+  }
   .hero-visual { display: none; }
+
+  .countdown-section,
+  .about-section,
+  .schedule-section,
+  .venue-section,
+  .gallery-section,
+  .testimonials-section,
+  .rsvp-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .site-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   .about-grid { grid-template-columns: 1fr; gap: 3rem; }
   .venue-grid { grid-template-columns: 1fr; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
   .gg-tall, .gg-wide { grid-column: auto; grid-row: auto; }
   .form-row { grid-template-columns: 1fr; }
-  .rsvp-inner { padding: 2.5rem 1.5rem; }
+  .rsvp-inner { padding: 2.5rem 20px; }
 }
+
 @media (max-width: 600px) {
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .navbar,
+  .navbar.scrolled {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
   .nav-links { display: none; }
+  .hero { padding: 5.5rem 16px 3rem; }
+  .hero-date { padding: 1rem 12px; }
+  .hero-card, .venue-card, .testi-card { padding: 1.5rem 16px; }
   .about-features { grid-template-columns: 1fr; }
-  .tl-item { grid-template-columns: 60px 16px 1fr; gap: 1rem; }
+  .timeline { padding-left: 16px; }
+  .tl-item { grid-template-columns: 55px 14px 1fr; gap: 0.75rem; }
+  .tl-card { padding: 1.2rem 14px; }
+  .feature-card { padding: 1.2rem 14px; }
   .gallery-grid { grid-template-columns: 1fr; }
-  .gps-toast { left: 1rem; right: 1rem; bottom: 1rem; }
+  .rsvp-inner { padding: 2rem 16px; }
+  .preloader-content { padding: 1.8rem 16px; }
+  .gps-toast { left: 16px; right: 16px; bottom: 16px; padding: 1rem 14px; }
+}
+
+@media (max-width: 480px) {
+  .countdown { gap: 0.75rem; }
+  .count-block { min-width: 70px; }
+  .count-num { font-size: 2.5rem; }
+  .count-sep { font-size: 2.5rem; }
 }

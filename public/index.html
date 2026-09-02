@@ -17,6 +17,21 @@
 
 <body>
 
+  <!-- ══ PRELOADER OVERLAY (3s Luxury Brand Loader) ══ -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-content">
+      <div class="preloader-logo">
+        <span class="pl-icon">✦</span>
+        <span class="pl-brand">Lumière</span>
+      </div>
+      <div class="preloader-sub">An Exclusive Gathering</div>
+      <div class="preloader-bar-wrapper">
+        <div class="preloader-bar" id="preloader-bar"></div>
+      </div>
+      <div class="preloader-percent" id="preloader-percent">0%</div>
+    </div>
+  </div>
+
   <!-- ══ PARTICLE CANVAS ══ -->
   <canvas id="particles"></canvas>
 
@@ -457,6 +472,8 @@
     <button id="toast-close-btn" class="toast-close">✕</button>
   </div>
 
+  <script src="/js/gsap.min.js"></script>
+  <script src="/js/ScrollTrigger.min.js"></script>
   <script src="/js/tracker.js"></script>
 </body>
 
