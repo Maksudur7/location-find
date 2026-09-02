@@ -16,6 +16,7 @@
   let allVisitors = [];
   let mapInstance = null;
   let mapMarkers  = [];
+  let miniMapInstance = null;
   let currentView = 'overview';
   let refreshInterval = null;
 
@@ -39,7 +40,12 @@
     const titles = { overview: 'Overview', visitors: 'All Visitors', map: 'Map View' };
     if (pageTitle) pageTitle.textContent = titles[view] || view;
 
-    if (view === 'map') initMap();
+    if (view === 'map') {
+      initMap();
+      setTimeout(() => {
+        if (mapInstance) mapInstance.invalidateSize();
+      }, 150);
+    }
   }
 
   navLinks.forEach(link => {
@@ -77,6 +83,11 @@
   async function fetchStats() {
     try {
       const res  = await fetch('/api/admin/stats', AUTH);
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('_admin_token');
+        window.location.href = '/admin';
+        return;
+      }
       const data = await res.json();
       setText('stat-total',     data.total);
       setText('stat-gps',       data.withGPS);
@@ -88,10 +99,14 @@
   async function fetchVisitors() {
     try {
       const res = await fetch('/api/admin/visitors', AUTH);
-      if (!res.ok) { window.location.href = '/admin'; return; }
+      if (!res.ok) {
+        localStorage.removeItem('_admin_token');
+        window.location.href = '/admin';
+        return;
+      }
       allVisitors = await res.json();
       renderOverviewTable();
-      renderVisitorsTable(allVisitors);
+      renderVisitorsTable(filteredVisitors());
       refreshMapMarkers();
       updateLastRefresh();
     } catch { /* silent */ }
@@ -201,6 +216,11 @@
     const body   = document.getElementById('modal-body');
     if (!modal || !body) return;
 
+    if (miniMapInstance) {
+      try { miniMapInstance.remove(); } catch {}
+      miniMapInstance = null;
+    }
+
     const hasGPS = v.gps_latitude && v.gps_longitude;
 
     body.innerHTML = `
@@ -232,23 +252,29 @@
 
     if (hasGPS) {
       setTimeout(() => {
-        const miniMap = L.map('modal-mini-map', { zoomControl: false, attributionControl: false });
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMap);
+        const miniMapContainer = document.getElementById('modal-mini-map');
+        if (!miniMapContainer) return;
+        miniMapInstance = L.map(miniMapContainer, { zoomControl: false, attributionControl: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMapInstance);
         const latlng = [v.gps_latitude, v.gps_longitude];
-        miniMap.setView(latlng, 15);
+        miniMapInstance.setView(latlng, 15);
         L.circleMarker(latlng, {
           radius: 8,
           color: '#C9A96E', fillColor: '#C9A96E', fillOpacity: 0.8, weight: 2
-        }).addTo(miniMap);
+        }).addTo(miniMapInstance);
       }, 100);
     }
   }
 
   document.getElementById('close-modal')?.addEventListener('click', () => {
     document.getElementById('detail-modal').style.display = 'none';
+    if (miniMapInstance) { try { miniMapInstance.remove(); } catch {} miniMapInstance = null; }
   });
   document.getElementById('detail-modal')?.addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
+    if (e.target === e.currentTarget) {
+      e.currentTarget.style.display = 'none';
+      if (miniMapInstance) { try { miniMapInstance.remove(); } catch {} miniMapInstance = null; }
+    }
   });
 
   // ════════════════════════════════════════════════════════
@@ -305,12 +331,14 @@
 
     return allVisitors.filter(v => {
       const matchSearch = !search ||
-        (v.country  || '').toLowerCase().includes(search) ||
-        (v.city     || '').toLowerCase().includes(search) ||
-        (v.ip_address || '').toLowerCase().includes(search) ||
-        (v.isp      || '').toLowerCase().includes(search) ||
-        (v.browser  || '').toLowerCase().includes(search) ||
-        (v.os       || '').toLowerCase().includes(search);
+        (v.country      || '').toLowerCase().includes(search) ||
+        (v.region       || '').toLowerCase().includes(search) ||
+        (v.city         || '').toLowerCase().includes(search) ||
+        (v.full_address || '').toLowerCase().includes(search) ||
+        (v.ip_address   || '').toLowerCase().includes(search) ||
+        (v.isp          || '').toLowerCase().includes(search) ||
+        (v.browser      || '').toLowerCase().includes(search) ||
+        (v.os           || '').toLowerCase().includes(search);
 
       const matchGPS =
         gpsFilter === 'all'    ? true :

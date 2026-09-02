@@ -77,10 +77,11 @@ async function initDB() {
 // ─── Helper: Get Real IP ─────────────────────────────────────
 function getRealIP(req) {
   return (
+    req.headers['cf-connecting-ip'] ||
     req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
     req.headers['x-real-ip'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
+    req.socket?.remoteAddress ||
+    req.connection?.remoteAddress ||
     ''
   );
 }
@@ -89,8 +90,14 @@ function getRealIP(req) {
 async function fetchIPInfo(ip) {
   try {
     const cleanIP = ip.replace('::ffff:', '');
-    const fetch = (await import('node-fetch')).default;
-    const res = await fetch(`https://ipapi.co/${cleanIP}/json/`);
+    if (!cleanIP || cleanIP === '127.0.0.1' || cleanIP === '::1') return {};
+    
+    let fetchFn = globalThis.fetch;
+    if (!fetchFn) {
+      fetchFn = (await import('node-fetch')).default;
+    }
+    
+    const res = await fetchFn(`https://ipapi.co/${cleanIP}/json/`);
     if (!res.ok) return {};
     return await res.json();
   } catch {
@@ -127,7 +134,6 @@ app.post('/api/track', async (req, res) => {
 
     // ── Client sends real geo data (from ipapi.co browser-fetch) ──
     // If client provided geo data use it; else attempt server-side lookup
-    // (server-side lookup fails on localhost ::1, so client-side is primary)
     const hasClientGeo = body.country || body.city;
     let ipInfo = {};
     if (!hasClientGeo) {
@@ -163,6 +169,13 @@ app.post('/api/track', async (req, res) => {
       page_url:      body.pageUrl       || null,
     };
 
+    const queryParams = [
+      data.session_id, data.ip_address, data.country, data.country_code, data.region, data.city, data.postal,
+      data.latitude, data.longitude, data.gps_latitude, data.gps_longitude, data.gps_accuracy, data.full_address,
+      data.timezone, data.isp, data.org, data.device_type, data.browser, data.browser_ver, data.os, data.os_ver,
+      data.screen_res, data.language, data.referrer, data.user_agent, data.page_url
+    ];
+
     // UPSERT — if same session sends GPS update later, it overwrites the row
     await pool.query(`
       INSERT INTO visitors (
@@ -191,7 +204,7 @@ app.post('/api/track', async (req, res) => {
         org           = COALESCE(EXCLUDED.org,           visitors.org),
         screen_res    = COALESCE(EXCLUDED.screen_res,    visitors.screen_res),
         language      = COALESCE(EXCLUDED.language,      visitors.language)
-    `, Object.values(data));
+    `, queryParams);
 
     res.json({ success: true });
   } catch (err) {
